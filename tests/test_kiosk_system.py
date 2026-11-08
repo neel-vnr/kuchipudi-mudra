@@ -72,3 +72,29 @@ def test_kiosk_audio_manager(kiosk_instance):
     kiosk_instance.audio_manager.notify_state(MudraEvaluationState.STATE_A_CORRECT)
     kiosk_instance.audio_manager.notify_state(MudraEvaluationState.STATE_B_WRONG_MUDRA, "Wrong Mudra")
     kiosk_instance.audio_manager.notify_state(MudraEvaluationState.STATE_C_INCORRECT_EXECUTION, "Adjust index")
+
+
+def test_landmark_visualization_data(kiosk_instance):
+    dummy_cam = np.zeros((480, 640, 3), dtype=np.uint8)
+    # Test rendering with 21 MediaPipe mock landmark objects
+    dummy_landmarks = [
+        type("MockLM", (), {"x": 0.2 + 0.02 * i, "y": 0.3 + 0.015 * i, "z": 0.0})()
+        for i in range(21)
+    ]
+    statuses = {f: "Correct" for f in ["Thumb", "Index", "Middle", "Ring", "Pinky"]}
+    annotated = kiosk_instance.corr_engine.draw_correction_skeleton(
+        dummy_cam,
+        dummy_landmarks,
+        statuses,
+    )
+    assert annotated.shape == (480, 640, 3)
+    assert not np.array_equal(annotated, dummy_cam)
+
+
+def test_missing_reference_handling(kiosk_instance):
+    # Test reference visual for missing/unverified mudra
+    vis = kiosk_instance.get_reference_visual("99-NonexistentMudra", (400, 300))
+    assert vis.shape == (300, 400, 3)
+    assert vis.dtype == np.uint8
+    # Should still render the pending validation header
+    assert vis[:44, :].sum() > 0

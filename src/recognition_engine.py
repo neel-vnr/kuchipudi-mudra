@@ -60,6 +60,8 @@ class MudraRecognitionResult:
         expected_mudra: str = "",
         is_expected_match: bool = False,
         smoothed: bool = True,
+        hand_landmarks: Optional[Any] = None,
+        handedness: Optional[str] = None,
     ) -> None:
         self.hand_detected = hand_detected
         self.predicted_mudra = predicted_mudra
@@ -73,6 +75,8 @@ class MudraRecognitionResult:
         self.expected_mudra = expected_mudra
         self.is_expected_match = is_expected_match
         self.smoothed = smoothed
+        self.hand_landmarks = hand_landmarks
+        self.handedness = handedness or ""
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -84,6 +88,7 @@ class MudraRecognitionResult:
             "expected_mudra": self.expected_mudra,
             "is_expected_match": self.is_expected_match,
             "palm_orientation": self.palm_orientation,
+            "handedness": self.handedness,
         }
 
 
@@ -125,7 +130,7 @@ class MudraRecognitionEngine:
 
     def __init__(
         self,
-        default_model: str = "V4",
+        default_model: str = "V1",
         min_detection_confidence: float = 0.5,
         smoothing_window: int = 7,
         confidence_threshold: float = 0.35,
@@ -134,7 +139,7 @@ class MudraRecognitionEngine:
         self.min_detection_confidence = min_detection_confidence
         self.confidence_threshold = confidence_threshold
         self.hand_landmarker_path = hand_landmarker_path
-        self.active_model_key = default_model if default_model in self.AVAILABLE_MODELS else "V4"
+        self.active_model_key = default_model if default_model in self.AVAILABLE_MODELS else "V1"
 
         # Initialize detector
         self.detector = MediaPipeHandDetector(
@@ -250,19 +255,47 @@ class MudraRecognitionEngine:
         # Extract features according to active model specification
         active_cfg = self.AVAILABLE_MODELS[self.active_model_key]
         feature_cfg_name = active_cfg["feature_config"]
-
-        if feature_cfg_name == "control":
-            input_vector = norm_63.reshape(1, -1)
-            feat_98 = extract_v4_features(norm_pts, feature_config="angles_distances")
-        else:
-            feat_98 = extract_v4_features(norm_pts, feature_config="angles_distances")
-            input_vector = feat_98.reshape(1, -1)
-
-        # Run model prediction
         model = self._load_model(self.active_model_key)
-        raw_pred = str(model.predict(input_vector)[0])
-        probabilities = model.predict_proba(input_vector)[0]
-        raw_conf = float(np.max(probabilities))
+
+        def _get_pred_for_pts(p_21_3: np.ndarray) -> Tuple[str, float]:
+            if feature_cfg_name == "control":
+                vec = p_21_3.flatten().reshape(1, -1)
+            else:
+                f_98 = extract_v4_features(p_21_3, feature_config="angles_distances")
+                vec = f_98.reshape(1, -1)
+            pred = str(model.predict(vec)[0])
+            probs = model.predict_proba(vec)[0]
+            conf = float(np.max(probs))
+            return pred, conf
+
+        # Test both direct and canonicalized (left-to-right flipped) coordinates for dual-handedness
+        norm_pts_flipped = norm_pts.copy()
+        norm_pts_flipped[:, 0] = -norm_pts_flipped[:, 0]
+
+        pred_direct, conf_direct = _get_pred_for_pts(norm_pts)
+        pred_flipped, conf_flipped = _get_pred_for_pts(norm_pts_flipped)
+
+        handedness_label = ""
+        if getattr(result, "handedness", None) and len(result.handedness) > 0:
+            try:
+                handedness_label = result.handedness[0][0].category_name
+            except Exception:
+                handedness_label = ""
+
+        # Select highest-confidence canonical orientation (handles both left and right hands)
+        if conf_flipped > conf_direct + 0.05:
+            raw_pred, raw_conf = pred_flipped, conf_flipped
+            chosen_pts = norm_pts_flipped
+            if not handedness_label:
+                handedness_label = "Left"
+        else:
+            raw_pred, raw_conf = pred_direct, conf_direct
+            chosen_pts = norm_pts
+            if not handedness_label:
+                handedness_label = "Right"
+
+        norm_63 = chosen_pts.flatten()
+        feat_98 = extract_v4_features(chosen_pts, feature_config="angles_distances")
 
         # Temporal smoothing
         self.history.append((raw_pred, raw_conf))
@@ -312,6 +345,8 @@ class MudraRecognitionEngine:
             expected_mudra=expected_mudra,
             is_expected_match=is_match,
             smoothed=True,
+            hand_landmarks=first_hand,
+            handedness=handedness_label,
         )
 
         return res, display_frame

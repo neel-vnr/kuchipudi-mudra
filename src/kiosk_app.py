@@ -391,14 +391,14 @@ class InteractiveMudraKiosk:
                 )
 
         if not ref_data or not image_loaded:
-            # Display graceful message when reference is unavailable
+            # Display professional neutral placeholder when reference is unavailable
             cv2.putText(
                 vis,
-                "INSTRUCTOR REFERENCE NOT YET AVAILABLE",
-                (tw // 2 - 190, content_h // 2),
+                "Authentic instructor reference pending",
+                (tw // 2 - 120, content_h // 2),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.50,
-                (0, 140, 255),
+                0.55,
+                (0, 180, 200),
                 1,
                 cv2.LINE_AA,
             )

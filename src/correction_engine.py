@@ -362,7 +362,7 @@ class MudraCorrectionEngine:
     def draw_correction_skeleton(
         self,
         image_bgr: np.ndarray,
-        landmarks_21_3: np.ndarray,
+        landmarks: Union[Any, np.ndarray],
         finger_statuses: Dict[str, FingerStatus],
     ) -> np.ndarray:
         """Annotates skeleton with color-coded joints based on finger correctness."""
@@ -375,27 +375,59 @@ class MudraCorrectionEngine:
             FingerStatus.INCORRECT: (0, 0, 255),         # Bright Red
         }
 
-        # First draw normal connections in muted cyan
         coords: List[Tuple[int, int]] = []
-        for i in range(21):
-            px = int(np.clip(landmarks_21_3[i, 0] * w, 0, w - 1))
-            py = int(np.clip(landmarks_21_3[i, 1] * h, 0, h - 1))
-            coords.append((px, py))
+        if isinstance(landmarks, (list, tuple)):
+            for lm in landmarks:
+                if hasattr(lm, "x") and hasattr(lm, "y"):
+                    px = int(np.clip(lm.x * w, 0, w - 1))
+                    py = int(np.clip(lm.y * h, 0, h - 1))
+                elif isinstance(lm, (list, tuple)) and len(lm) >= 2:
+                    px = int(np.clip(lm[0] * w, 0, w - 1))
+                    py = int(np.clip(lm[1] * h, 0, h - 1))
+                else:
+                    px, py = 0, 0
+                coords.append((px, py))
+        elif isinstance(landmarks, np.ndarray):
+            pts = landmarks.reshape(21, -1)
+            # Detect whether points are wrist-centered (norm_pts with negative coords) or image-normalized [0, 1]
+            if np.min(pts[:, :2]) < -0.05 or np.max(pts[:, :2]) > 1.05:
+                cx, cy = w / 2.0, h / 2.0
+                span = min(w, h) * 0.4
+                for i in range(21):
+                    px = int(np.clip(cx + pts[i, 0] * span, 0, w - 1))
+                    py = int(np.clip(cy + pts[i, 1] * span, 0, h - 1))
+                    coords.append((px, py))
+            else:
+                for i in range(21):
+                    px = int(np.clip(pts[i, 0] * w, 0, w - 1))
+                    py = int(np.clip(pts[i, 1] * h, 0, h - 1))
+                    coords.append((px, py))
 
+        if len(coords) < 21:
+            return out
+
+        # Draw connections with high contrast outline
         for s_idx, e_idx in HAND_CONNECTIONS:
-            cv2.line(out, coords[s_idx], coords[e_idx], (200, 180, 0), 2, cv2.LINE_AA)
+            pt1 = coords[s_idx]
+            pt2 = coords[e_idx]
+            # Dark backing line for contrast against light backgrounds
+            cv2.line(out, pt1, pt2, (0, 0, 0), 4, cv2.LINE_AA)
+            # Bright cyan foreground line
+            cv2.line(out, pt1, pt2, (255, 200, 0), 2, cv2.LINE_AA)
 
-        # Draw color-coded joint circles per finger
+        # Draw color-coded joint circles per finger with dark outer outline
         for finger_name, joint_idxs in FINGER_INDICES_MAP.items():
             status = finger_statuses.get(finger_name, FingerStatus.CORRECT)
             col = status_colors[status]
             for j_idx in joint_idxs:
                 px, py = coords[j_idx]
+                cv2.circle(out, (px, py), 6, (0, 0, 0), -1, cv2.LINE_AA)
                 cv2.circle(out, (px, py), 5, col, -1, cv2.LINE_AA)
                 cv2.circle(out, (px, py), 2, (255, 255, 255), -1, cv2.LINE_AA)
 
         # Wrist joint (index 0)
-        cv2.circle(out, coords[0], 6, (255, 255, 255), -1, cv2.LINE_AA)
+        cv2.circle(out, coords[0], 8, (0, 0, 0), -1, cv2.LINE_AA)
+        cv2.circle(out, coords[0], 7, (255, 255, 255), -1, cv2.LINE_AA)
         cv2.circle(out, coords[0], 4, (0, 180, 255), -1, cv2.LINE_AA)
 
         return out

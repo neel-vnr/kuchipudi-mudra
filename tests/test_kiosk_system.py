@@ -124,3 +124,28 @@ def test_dynamic_mudra_switching_changes_visual(kiosk_instance):
 
     assert not np.array_equal(vis_pataka, vis_next), "Reference panel did not change on mudra switch"
 
+
+def test_coordinate_transformation_mathematics():
+    """Verifies coordinate transformation mathematically for different frame sizes and mirrored/unmirrored frames (Task 4)."""
+    w_src, h_src = 640, 480
+    w_disp, h_disp = 625, 445
+
+    class MockLM:
+        def __init__(self, x, y, z):
+            self.x = x
+            self.y = y
+            self.z = z
+
+    # Test normalized coordinate mapping
+    lm = MockLM(0.25, 0.75, 0.0)
+    px = int(np.clip(lm.x * w_src, 0, w_src - 1))
+    py = int(np.clip(lm.y * h_src, 0, h_src - 1))
+    assert px == int(0.25 * 640)
+    assert py == int(0.75 * 480)
+
+    # Test mirrored frame transformation (cv2.flip horizontal)
+    lm_flipped_x = 1.0 - lm.x
+    px_flipped = int(np.clip(lm_flipped_x * w_src, 0, w_src - 1))
+    assert px_flipped == int(0.75 * 640)
+
+

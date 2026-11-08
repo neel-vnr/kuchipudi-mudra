@@ -537,11 +537,12 @@ class InteractiveMudraKiosk:
         annotated_cam = camera_frame.copy()
         h_cam, w_cam = annotated_cam.shape[:2]
 
-        if rec_result.hand_detected and rec_result.landmarks_21_3 is not None:
+        landmarks_to_draw = rec_result.hand_landmarks if rec_result.hand_landmarks is not None else rec_result.landmarks_21_3
+        if rec_result.hand_detected and landmarks_to_draw is not None:
             # Draw corrected skeleton with color-coded fingers
             annotated_cam = self.corr_engine.draw_correction_skeleton(
                 annotated_cam,
-                rec_result.landmarks_21_3,
+                landmarks_to_draw,
                 report.finger_statuses,
             )
 
@@ -551,13 +552,26 @@ class InteractiveMudraKiosk:
 
         # Left Pane Sub-header
         cv2.rectangle(canvas, (left_x, pane_y), (left_x + pane_w, pane_y + 35), (20, 20, 20), -1)
+        hand_status_text = f"● Hand Detected ({rec_result.handedness})" if rec_result.hand_detected else "○ No Hand Detected"
+        hand_status_color = (0, 220, 100) if rec_result.hand_detected else (0, 165, 255)
+
         cv2.putText(
             canvas,
-            "LIVE PERFORMANCE — WEBPOC / CAMERA FEED",
+            "LIVE CAM",
             (left_x + 12, pane_y + 23),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.50,
             (0, 220, 255),
+            1,
+            cv2.LINE_AA,
+        )
+        cv2.putText(
+            canvas,
+            hand_status_text,
+            (left_x + 105, pane_y + 23),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.42,
+            hand_status_color,
             1,
             cv2.LINE_AA,
         )
@@ -575,10 +589,26 @@ class InteractiveMudraKiosk:
                 cv2.LINE_AA,
             )
 
-        # Debug Overlay (when enabled)
+        # Debug Overlay (when enabled via 'd' key)
         if self.debug_mode:
-            dbg_text = f"Hands: {1 if rec_result.hand_detected else 0} | Conf: {rec_result.confidence*100:.1f}% | Res: {w_cam}x{h_cam}"
-            cv2.putText(canvas, dbg_text, (left_x + 12, pane_y + pane_h - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (0, 255, 0), 1, cv2.LINE_AA)
+            l0_norm = "N/A"
+            l0_px = "N/A"
+            if rec_result.hand_detected and rec_result.hand_landmarks and len(rec_result.hand_landmarks) > 0:
+                l0 = rec_result.hand_landmarks[0]
+                l0_norm = f"({l0.x:.3f}, {l0.y:.3f})"
+                l0_px = f"({int(l0.x * w_cam)}, {int(l0.y * h_cam)})"
+
+            dbg_lines = [
+                f"Orig Frame Res: {w_cam}x{h_cam}",
+                f"Detection Input: {w_cam}x{h_cam}",
+                f"Display Pane Res: {pane_w}x{pane_h}",
+                f"Hands Detected: {1 if rec_result.hand_detected else 0}",
+                f"L0 Norm: {l0_norm} | Px: {l0_px}",
+            ]
+            dy = pane_y + pane_h - 110
+            for line in dbg_lines:
+                cv2.putText(canvas, line, (left_x + 12, dy), cv2.FONT_HERSHEY_SIMPLEX, 0.38, (0, 255, 0), 1, cv2.LINE_AA)
+                dy += 18
 
         # Right Panel: Reference Pose
         right_x = left_x + pane_w + 10

@@ -136,14 +136,40 @@ def build_reference_library(
         src_img_path = Path(img_rel_path)
         dest_img_filename = f"{cls_name}_reference.jpg"
         dest_img_path = images_dir / dest_img_filename
+
+        image_written = False
         if src_img_path.is_file():
             img_bgr = cv2.imread(str(src_img_path))
             if img_bgr is not None:
                 cv2.imwrite(str(dest_img_path), img_bgr)
+                image_written = True
                 total_images += 1
-        else:
-            blank_img = np.zeros((400, 400, 3), dtype=np.uint8)
-            cv2.putText(blank_img, cls_name, (20, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+
+        if not image_written and dest_img_path.is_file():
+            existing_img = cv2.imread(str(dest_img_path))
+            if existing_img is not None and existing_img.mean() > 20.0:
+                image_written = True
+                total_images += 1
+
+        if not image_written:
+            try:
+                num = int(cls_name.split("-")[0])
+                pattern = f"{num:02d}_*.jpg"
+            except Exception:
+                pattern = f"*{cls_name}*.jpg"
+            cs_matches = list(Path("reports/dataset_merge_audit/contact_sheets").glob(pattern))
+            if cs_matches:
+                cs_img = cv2.imread(str(cs_matches[0]))
+                if cs_img is not None:
+                    thumb = cs_img[108:298, 8:198]
+                    hq = cv2.resize(thumb, (400, 400), interpolation=cv2.INTER_LANCZOS4)
+                    cv2.imwrite(str(dest_img_path), hq)
+                    image_written = True
+                    total_images += 1
+
+        if not image_written:
+            blank_img = np.full((400, 400, 3), 30, dtype=np.uint8)
+            cv2.putText(blank_img, cls_name, (20, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 180, 255), 2)
             cv2.imwrite(str(dest_img_path), blank_img)
             total_images += 1
 

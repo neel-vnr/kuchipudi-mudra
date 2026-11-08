@@ -232,6 +232,7 @@ class InteractiveMudraKiosk:
 
         self.cached_ref_img: Optional[np.ndarray] = None
         self.cached_ref_mudra: str = ""
+        self.show_reference_skeleton: bool = False
 
         self.buttons: List[KioskButton] = []
         self._init_buttons()
@@ -300,13 +301,22 @@ class InteractiveMudraKiosk:
 
     def next_mudra(self) -> None:
         self.current_mudra_idx = (self.current_mudra_idx + 1) % len(self.supported_mudras)
+        self.cached_ref_img = None
+        self.cached_ref_mudra = ""
         self.try_again()
         logger.info(f"Switched to next mudra: {self.current_expected_mudra}")
 
     def previous_mudra(self) -> None:
         self.current_mudra_idx = (self.current_mudra_idx - 1) % len(self.supported_mudras)
+        self.cached_ref_img = None
+        self.cached_ref_mudra = ""
         self.try_again()
         logger.info(f"Switched to previous mudra: {self.current_expected_mudra}")
+
+    def toggle_reference_skeleton(self) -> None:
+        self.show_reference_skeleton = not self.show_reference_skeleton
+        self.cached_ref_img = None
+        logger.info(f"Reference skeleton overlay toggled: {self.show_reference_skeleton}")
 
     def try_again(self) -> None:
         self.rec_engine.clear_smoothing()
@@ -351,72 +361,114 @@ class InteractiveMudraKiosk:
             return cv2.resize(self.cached_ref_img, (tw, th))
 
         header_h = 44
-        content_h = th - header_h
+        footer_h = 50
+        content_h = th - header_h - footer_h
 
         ref_data = self.corr_engine.get_reference_data(expected_mudra)
-        vis = np.full((content_h, tw, 3), 22, dtype=np.uint8)
+        vis = np.full((content_h, tw, 3), 20, dtype=np.uint8)
         image_loaded = False
+        val_status = "pending_instructor_validation"
+        source_attribution = "Bharatanatyam Dataset (Kokul et al.) — Provisional Visual Example"
 
         if ref_data:
+            meta = ref_data.get("metadata", {})
+            val_status = meta.get("instructor_validation_status", "pending_instructor_validation")
             img_path = Path(ref_data["image_path"])
             if img_path.is_file():
                 raw_img = cv2.imread(str(img_path))
-                if raw_img is not None:
+                if raw_img is not None and raw_img.size > 0:
                     image_loaded = True
                     ih, iw = raw_img.shape[:2]
                     scale = min(tw / iw, content_h / ih)
-                    nw, nh = int(iw * scale), int(ih * scale)
-                    resized = cv2.resize(raw_img, (nw, nh))
+                    nw, nh = max(1, int(iw * scale)), max(1, int(ih * scale))
+                    resized = cv2.resize(raw_img, (nw, nh), interpolation=cv2.INTER_LANCZOS4)
 
-                    # Center inside panel
+                    # Optional reference skeleton overlay when genuine landmarks are available
+                    if self.show_reference_skeleton and "landmarks" in ref_data:
+                        lms = ref_data["landmarks"]
+                        resized = draw_hand_landmarks_on_image(
+                            resized,
+                            lms,
+                            draw_connections=True,
+                            draw_points=True,
+                            connection_color=(0, 220, 100),
+                            point_color=(0, 255, 255),
+                            point_radius=4,
+                            line_thickness=2,
+                        )
+
+                    # Center inside content viewport proportionally
                     ox = (tw - nw) // 2
                     oy = (content_h - nh) // 2
                     vis[oy : oy + nh, ox : ox + nw] = resized
 
-            # Draw reference landmarks and connections if available
-            if "landmarks" in ref_data:
-                lms = ref_data["landmarks"]
-                # Draw on vis with offset
-                ox = (tw - int(tw * 0.8)) // 2
-                oy = (content_h - int(content_h * 0.8)) // 2
-                vis = draw_hand_landmarks_on_image(
-                    vis,
-                    lms,
-                    draw_connections=True,
-                    draw_points=True,
-                    connection_color=(0, 220, 100),
-                    point_color=(0, 255, 255),
-                    point_radius=4,
-                    line_thickness=2,
-                )
-
-        if not ref_data or not image_loaded:
-            # Display professional neutral placeholder when reference is unavailable
+        if not image_loaded:
+            # Display clear message when genuine reference image is unavailable
+            cv2.rectangle(vis, (tw // 2 - 200, content_h // 2 - 45), (tw // 2 + 200, content_h // 2 + 45), (32, 32, 32), -1)
+            cv2.rectangle(vis, (tw // 2 - 200, content_h // 2 - 45), (tw // 2 + 200, content_h // 2 + 45), (60, 60, 60), 1)
             cv2.putText(
                 vis,
-                "Authentic instructor reference pending",
-                (tw // 2 - 120, content_h // 2),
+                "REFERENCE IMAGE NOT AVAILABLE",
+                (tw // 2 - 165, content_h // 2 - 5),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.55,
-                (0, 180, 200),
+                0.58,
+                (0, 0, 240),
+                2,
+                cv2.LINE_AA,
+            )
+            cv2.putText(
+                vis,
+                "Awaiting authentic instructor reference upload",
+                (tw // 2 - 165, content_h // 2 + 25),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.42,
+                (170, 170, 170),
                 1,
                 cv2.LINE_AA,
             )
 
-        # Assemble full panel with header banner
+        # Assemble full panel: Header + Photo Content + Footer
         panel = np.full((th, tw, 3), 18, dtype=np.uint8)
-        panel[header_h:, :] = vis
+        panel[header_h : header_h + content_h, :] = vis
 
-        # Header banner with correct required warning text
+        # 1. Header banner with required warning text
         cv2.rectangle(panel, (0, 0), (tw, header_h), (25, 25, 25), -1)
         cv2.line(panel, (0, header_h), (tw, header_h), (60, 60, 60), 1)
         cv2.putText(
             panel,
-            "REFERENCE POSE — PENDING INSTRUCTOR VALIDATION",
-            (12, 27),
+            "PROVISIONAL VISUAL EXAMPLE — PENDING KUCHIPUDI INSTRUCTOR VALIDATION",
+            (12, 28),
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.46,
-            (255, 165, 0),  # Amber warning color
+            0.42,
+            (0, 165, 255),  # Amber warning color
+            1,
+            cv2.LINE_AA,
+        )
+
+        # 2. Footer banner with Mudra Name, Status, and Attribution
+        footer_y = header_h + content_h
+        cv2.rectangle(panel, (0, footer_y), (tw, th), (22, 22, 22), -1)
+        cv2.line(panel, (0, footer_y), (tw, footer_y), (50, 50, 50), 1)
+
+        status_display = "Instructor Verified" if val_status == "instructor_verified" else "Pending Instructor Validation"
+        cv2.putText(
+            panel,
+            f"Mudra: {expected_mudra}  |  Status: {status_display}",
+            (12, footer_y + 20),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.45,
+            (255, 255, 255),
+            1,
+            cv2.LINE_AA,
+        )
+
+        cv2.putText(
+            panel,
+            f"Source: {source_attribution}",
+            (12, footer_y + 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.38,
+            (160, 160, 160),
             1,
             cv2.LINE_AA,
         )
@@ -582,7 +634,7 @@ class InteractiveMudraKiosk:
     def run(self, max_frames: Optional[int] = None, save_sample_path: Optional[Path] = None) -> None:
         print("=" * 60)
         print("STARTING KUCHIPUDI MUDRA LEARNING STUDIO")
-        print("Controls: 'n' (Next), 'p' (Prev), 't' (Try Again), 'r' (Repeat), 'm' (Mute), 'q' (Quit)")
+        print("Controls: 'n' (Next), 'p' (Prev), 't' (Try Again), 'r' (Repeat), 'm' (Mute), 's' (Skeleton), 'q' (Quit)")
         print("=" * 60)
 
         cap = cv2.VideoCapture(self.camera_index if self.camera_index is not None else 0)
@@ -653,6 +705,8 @@ class InteractiveMudraKiosk:
                         self.repeat_instruction()
                     elif key in (ord("m"), ord("M")):
                         self.toggle_mute()
+                    elif key in (ord("s"), ord("S")):
+                        self.toggle_reference_skeleton()
                     elif key in (ord("d"), ord("D")):
                         self.debug_mode = not self.debug_mode
                 except Exception:

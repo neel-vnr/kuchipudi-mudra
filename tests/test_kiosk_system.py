@@ -96,5 +96,31 @@ def test_missing_reference_handling(kiosk_instance):
     vis = kiosk_instance.get_reference_visual("99-NonexistentMudra", (400, 300))
     assert vis.shape == (300, 400, 3)
     assert vis.dtype == np.uint8
-    # Should still render the pending validation header
+    # Should render the pending validation header
     assert vis[:44, :].sum() > 0
+
+
+def test_all_30_reference_images_are_genuine_photos(kiosk_instance):
+    """Verifies all 30 reference images exist, are valid photos, and not black placeholders."""
+    for mudra_id in kiosk_instance.supported_mudras:
+        ref_data = kiosk_instance.corr_engine.get_reference_data(mudra_id)
+        assert ref_data is not None, f"Reference data missing for {mudra_id}"
+        img_path = Path(ref_data["image_path"])
+        assert img_path.is_file(), f"Image file missing for {mudra_id} at {img_path}"
+        img = cv2.imread(str(img_path))
+        assert img is not None, f"Failed to load image for {mudra_id}"
+        assert img.shape == (400, 400, 3), f"Unexpected shape for {mudra_id}: {img.shape}"
+        # Genuine photograph should have substantial non-zero content and contrast
+        assert img.mean() > 50.0, f"Image for {mudra_id} appears too dark or placeholder (mean={img.mean()})"
+        assert img.std() > 25.0, f"Image for {mudra_id} lacks contrast (std={img.std()})"
+
+
+def test_dynamic_mudra_switching_changes_visual(kiosk_instance):
+    """Verifies that selecting another mudra immediately changes the reference photograph."""
+    vis_pataka = kiosk_instance.get_reference_visual("1-Pataka", (400, 300))
+    kiosk_instance.next_mudra()
+    current_mudra = kiosk_instance.current_expected_mudra
+    vis_next = kiosk_instance.get_reference_visual(current_mudra, (400, 300))
+
+    assert not np.array_equal(vis_pataka, vis_next), "Reference panel did not change on mudra switch"
+

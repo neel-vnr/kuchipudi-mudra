@@ -43,6 +43,84 @@ from features import (
 logger = logging.getLogger("RecognitionEngine")
 
 
+def normalize_probabilities(probs: Union[np.ndarray, List[float]]) -> np.ndarray:
+    """Normalizes an array or list of probability scores so they sum strictly to 1.0."""
+    arr = np.asarray(probs, dtype=np.float64)
+    arr = np.clip(arr, 0.0, None)
+    total = float(np.sum(arr))
+    if total > 0.0:
+        return arr / total
+    n = len(arr)
+    return np.ones(n, dtype=np.float64) / max(1, n)
+
+
+class PredictionItem(dict):
+    """Represents a single prediction with class name and probability score.
+
+    Supports unpacking (cls, prob = item), indexing (item[0], item[1]),
+    dict access (item['class'], item['probability']), and attributes (.class_name, .probability).
+    """
+
+    def __init__(self, class_name: str, probability: float) -> None:
+        prob = float(probability)
+        super().__init__({
+            "class": class_name,
+            "class_name": class_name,
+            "mudra": class_name,
+            "probability": prob,
+            "confidence": prob,
+            "score": prob,
+        })
+        self._class_name = class_name
+        self._probability = prob
+
+    def __getitem__(self, key: Any) -> Any:
+        if key == 0:
+            return self._class_name
+        elif key == 1:
+            return self._probability
+        return super().__getitem__(key)
+
+    def __iter__(self):
+        yield self._class_name
+        yield self._probability
+
+    def __len__(self) -> int:
+        return 2
+
+    @property
+    def class_name(self) -> str:
+        return self._class_name
+
+    @property
+    def mudra(self) -> str:
+        return self._class_name
+
+    @property
+    def probability(self) -> float:
+        return self._probability
+
+    @property
+    def confidence(self) -> float:
+        return self._probability
+
+    @property
+    def score(self) -> float:
+        return self._probability
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "class": self._class_name,
+            "mudra": self._class_name,
+            "probability": round(self._probability, 4),
+            "score": round(self._probability, 4),
+        }
+
+
+# Alias for compatibility
+PredictionEntry = PredictionItem
+
+
 class MudraRecognitionResult:
     """Encapsulates the complete result of a recognition cycle."""
 
@@ -52,6 +130,11 @@ class MudraRecognitionResult:
         predicted_mudra: str = "",
         confidence: float = 0.0,
         raw_confidence: float = 0.0,
+        top1_prediction: str = "",
+        top1_confidence: float = 0.0,
+        top3_predictions: Optional[List[PredictionItem]] = None,
+        confidence_threshold: float = 0.35,
+        is_stable: bool = False,
         landmarks_21_3: Optional[np.ndarray] = None,
         normalized_63: Optional[np.ndarray] = None,
         features_98: Optional[np.ndarray] = None,
@@ -62,11 +145,20 @@ class MudraRecognitionResult:
         smoothed: bool = True,
         hand_landmarks: Optional[Any] = None,
         handedness: Optional[str] = None,
+        # Backward-compatibility alias parameters
+        top1_mudra: Optional[str] = None,
+        prediction_stable: Optional[bool] = None,
     ) -> None:
         self.hand_detected = hand_detected
         self.predicted_mudra = predicted_mudra
-        self.confidence = confidence
-        self.raw_confidence = raw_confidence
+        self.confidence = float(confidence)
+        self.raw_confidence = float(raw_confidence)
+        self.top1_prediction = top1_prediction or (top1_mudra if top1_mudra is not None else predicted_mudra)
+        self.top1_confidence = float(top1_confidence) if top1_confidence else float(confidence)
+        self.top3_predictions = top3_predictions if top3_predictions is not None else []
+        self.confidence_threshold = float(confidence_threshold)
+        self.is_stable = is_stable if prediction_stable is None else prediction_stable
+        self.prediction_stable = self.is_stable
         self.landmarks_21_3 = landmarks_21_3
         self.normalized_63 = normalized_63
         self.features_98 = features_98
@@ -78,12 +170,30 @@ class MudraRecognitionResult:
         self.hand_landmarks = hand_landmarks
         self.handedness = handedness or ""
 
+    @property
+    def top1_mudra(self) -> str:
+        return self.top1_prediction
+
+    @top1_mudra.setter
+    def top1_mudra(self, val: str) -> None:
+        self.top1_prediction = val
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "hand_detected": self.hand_detected,
             "predicted_mudra": self.predicted_mudra,
             "confidence": round(self.confidence, 4),
             "raw_confidence": round(self.raw_confidence, 4),
+            "top1_prediction": self.top1_prediction,
+            "top1_mudra": self.top1_prediction,
+            "top1_confidence": round(self.top1_confidence, 4),
+            "top3_predictions": [
+                p.to_dict() if hasattr(p, "to_dict") else {"class": p[0], "probability": round(p[1], 4)}
+                for p in self.top3_predictions
+            ],
+            "confidence_threshold": round(self.confidence_threshold, 4),
+            "is_stable": self.is_stable,
+            "prediction_stable": self.is_stable,
             "active_model_name": self.active_model_name,
             "expected_mudra": self.expected_mudra,
             "is_expected_match": self.is_expected_match,
@@ -96,6 +206,14 @@ class MudraRecognitionEngine:
     """Unified Recognition Engine capable of multi-model inference and pose comparison."""
 
     AVAILABLE_MODELS: Dict[str, Dict[str, Any]] = {
+        "AUTO": {
+            "name": "AUTO Intelligent Routing (V1 Primary / V4 Fallback)",
+            "path": "models/final_svm_model.joblib",
+            "fallback_path": "models/v4_svm_model.joblib",
+            "feature_config": "control",
+            "fallback_feature_config": "angles_distances",
+            "feature_dim": 63,
+        },
         "V1": {
             "name": "V1 Baseline SVM",
             "path": "models/final_svm_model.joblib",
@@ -148,13 +266,40 @@ class MudraRecognitionEngine:
             min_hand_detection_confidence=min_detection_confidence,
         )
 
-        # Cache of loaded models
+        # Cache of loaded models (Warm-loaded Model Registry)
         self._loaded_models: Dict[str, Any] = {}
-        self._load_model(self.active_model_key)
+        for key in self.AVAILABLE_MODELS.keys():
+            if key == "AUTO":
+                continue
+            try:
+                self._load_model(key)
+            except Exception as e:
+                logger.warning(f"Could not warm-load model {key}: {e}")
+
+        # Load active model with AUTO resolution
+        eff_key = self.get_effective_model_key()
+        self._load_model(eff_key)
 
         # Temporal smoother
         self.window_size = smoothing_window
         self.history: Deque[Tuple[str, float]] = deque(maxlen=smoothing_window)
+
+    def get_effective_model_key(self) -> str:
+        """Resolves AUTO to V1 primary or V4 fallback by attempting actual loading and deserialization."""
+        if self.active_model_key == "AUTO":
+            try:
+                self._load_model("V1")
+                logger.info("AUTO successfully selected primary model V1 (63 features).")
+                return "V1"
+            except Exception as e1:
+                logger.warning(f"AUTO: V1 primary model failed to load/deserialize ({e1}). Attempting fallback to V4.")
+                try:
+                    self._load_model("V4")
+                    logger.info("AUTO successfully fell back to model V4 (98 features).")
+                    return "V4"
+                except Exception as e2:
+                    raise RuntimeError(f"AUTO initialization failed: Both V1 primary ({e1}) and V4 fallback ({e2}) failed to load.")
+        return self.active_model_key
 
     def _load_model(self, model_key: str) -> Any:
         if model_key not in self.AVAILABLE_MODELS:
@@ -234,6 +379,8 @@ class MudraRecognitionEngine:
         Returns:
             Tuple of (MudraRecognitionResult, annotated_display_frame)
         """
+        import time as _time
+        start = _time.perf_counter()
         display_frame = bgr_frame.copy()
         detected, result, det_err = self.detector.detect(bgr_frame)
 
@@ -243,6 +390,8 @@ class MudraRecognitionEngine:
                 hand_detected=False,
                 active_model_name=self.AVAILABLE_MODELS[self.active_model_key]["name"],
                 expected_mudra=expected_mudra,
+                confidence_threshold=self.confidence_threshold,
+                prediction_stable=True,
             ), display_frame
 
         first_hand = result.hand_landmarks[0]
@@ -252,28 +401,31 @@ class MudraRecognitionEngine:
         norm_pts = normalize_landmarks(raw_pts, scale_mode="max_distance")
         norm_63 = norm_pts.flatten()
 
-        # Extract features according to active model specification
+        # Extract features according to active model specification (with AUTO fallback support)
+        effective_key = self.get_effective_model_key()
         active_cfg = self.AVAILABLE_MODELS[self.active_model_key]
-        feature_cfg_name = active_cfg["feature_config"]
-        model = self._load_model(self.active_model_key)
+        eff_cfg = self.AVAILABLE_MODELS[effective_key]
+        feature_cfg_name = eff_cfg["feature_config"]
+        model = self._load_model(effective_key)
 
-        def _get_pred_for_pts(p_21_3: np.ndarray) -> Tuple[str, float]:
+        def _get_pred_for_pts(p_21_3: np.ndarray) -> Tuple[str, float, np.ndarray]:
             if feature_cfg_name == "control":
                 vec = p_21_3.flatten().reshape(1, -1)
             else:
                 f_98 = extract_v4_features(p_21_3, feature_config="angles_distances")
                 vec = f_98.reshape(1, -1)
             pred = str(model.predict(vec)[0])
-            probs = model.predict_proba(vec)[0]
+            raw_probs = model.predict_proba(vec)[0]
+            probs = normalize_probabilities(raw_probs)
             conf = float(np.max(probs))
-            return pred, conf
+            return pred, conf, probs
 
         # Test both direct and canonicalized (left-to-right flipped) coordinates for dual-handedness
         norm_pts_flipped = norm_pts.copy()
         norm_pts_flipped[:, 0] = -norm_pts_flipped[:, 0]
 
-        pred_direct, conf_direct = _get_pred_for_pts(norm_pts)
-        pred_flipped, conf_flipped = _get_pred_for_pts(norm_pts_flipped)
+        pred_direct, conf_direct, probs_direct = _get_pred_for_pts(norm_pts)
+        pred_flipped, conf_flipped, probs_flipped = _get_pred_for_pts(norm_pts_flipped)
 
         handedness_label = ""
         if getattr(result, "handedness", None) and len(result.handedness) > 0:
@@ -284,12 +436,12 @@ class MudraRecognitionEngine:
 
         # Select highest-confidence canonical orientation (handles both left and right hands)
         if conf_flipped > conf_direct + 0.05:
-            raw_pred, raw_conf = pred_flipped, conf_flipped
+            raw_pred, raw_conf, chosen_probs = pred_flipped, conf_flipped, probs_flipped
             chosen_pts = norm_pts_flipped
             if not handedness_label:
                 handedness_label = "Left"
         else:
-            raw_pred, raw_conf = pred_direct, conf_direct
+            raw_pred, raw_conf, chosen_probs = pred_direct, conf_direct, probs_direct
             chosen_pts = norm_pts
             if not handedness_label:
                 handedness_label = "Right"
@@ -320,6 +472,35 @@ class MudraRecognitionEngine:
                 or final_pred.split("-")[-1].lower() == expected_mudra.split("-")[-1].lower()
             )
 
+        # Build top-3 predictions from model class names and normalized probabilities
+        top3_predictions: List[PredictionItem] = []
+        try:
+            classes_arr = getattr(model, "classes_", None)
+            if classes_arr is None and hasattr(model, "named_steps"):
+                classes_arr = getattr(model.named_steps.get("classifier", None), "classes_", None)
+            if classes_arr is None:
+                classes_arr = [f"Class_{i}" for i in range(len(chosen_probs))]
+
+            top_idx = np.argsort(-chosen_probs)[:3]
+            for idx in top_idx:
+                cls_name = str(classes_arr[idx])
+                prob = float(chosen_probs[idx])
+                top3_predictions.append(PredictionItem(cls_name, prob))
+        except Exception:
+            if final_pred and final_pred != "Uncertain":
+                top3_predictions.append(PredictionItem(final_pred, smoothed_conf))
+
+        # Determine prediction stability after smoothing
+        prediction_stable = bool(
+            final_pred != "Uncertain"
+            and len(self.history) >= min(3, self.window_size)
+            and (count / len(self.history)) >= 0.6
+            and self.history[-1][0] == majority_pred
+        )
+
+        end_tok = _time.perf_counter()
+        latency_ms = (end_tok - start) * 1000
+
         # Overlay 21-joint skeleton
         display_frame = draw_hand_landmarks_on_image(
             display_frame,
@@ -332,16 +513,24 @@ class MudraRecognitionEngine:
             line_thickness=2,
         )
 
+        top1_p = top3_predictions[0].class_name if top3_predictions else final_pred
+        top1_c = float(top3_predictions[0].probability) if top3_predictions else smoothed_conf
+
         res = MudraRecognitionResult(
             hand_detected=True,
             predicted_mudra=final_pred,
             confidence=smoothed_conf,
             raw_confidence=raw_conf,
+            top1_prediction=top1_p,
+            top1_confidence=top1_c,
+            top3_predictions=top3_predictions,
+            confidence_threshold=self.confidence_threshold,
+            is_stable=prediction_stable,
             landmarks_21_3=norm_pts,
             normalized_63=norm_63,
             features_98=feat_98,
             palm_orientation=palm_info,
-            active_model_name=active_cfg["name"],
+            active_model_name=f"{active_cfg['name']} -> {eff_cfg['name']}" if self.active_model_key == "AUTO" else active_cfg["name"],
             expected_mudra=expected_mudra,
             is_expected_match=is_match,
             smoothed=True,

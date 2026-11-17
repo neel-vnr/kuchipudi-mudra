@@ -2,7 +2,7 @@
 
 
 
-A computer vision project that recognizes 30 Bharatanatyam single-hand mudras in real time using MediaPipe hand landmarks and a Support Vector Machine (SVM) classifier.
+A computer vision project that recognizes 30 Bharatanatyam/Kuchipudi  single-hand mudras in real time using MediaPipe hand landmarks and a Support Vector Machine (SVM) classifier.
 
 
 

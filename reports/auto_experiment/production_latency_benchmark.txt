@@ -1,0 +1,18 @@
+=================================================================
+      MUDRAGURU — PRODUCTION ARTIFACT LATENCY & ACCURACY REPORT
+=================================================================
+
+1. PRODUCTION ARTIFACT PERFORMANCE (Independent Test Split - 963 Samples):
+--------------------------------------------------
+Model Feature Dim  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Log Loss  Brier Score  Median Latency (ms)  p95 Latency (ms)
+   V1          63    0.9148           0.9139        0.9091    0.9093       0.9146    5.9741       0.1543                0.083             0.091
+   V2          63    0.8982           0.8979        0.8919    0.8915       0.8974    7.8225       0.1349                0.327             0.332
+   V3          63    0.9097           0.9103        0.9049    0.9037       0.9083    7.7965       0.1378                0.358             0.366
+   V4          98    0.9097           0.9099        0.9052    0.9033       0.9082    7.8672       0.1267                0.303             0.308
+   V5          98    0.8993           0.8948        0.8937    0.8926       0.8978   15.1433       0.1757                0.001             0.002
+
+2. FEATURE EXTRACTION PROFILING (time.perf_counter_ns):
+--------------------------------------------------
+   - 63-Feature Extraction (Median): 0.000 ms
+   - 98-Feature Extraction (Median): 0.103 ms
+=================================================================

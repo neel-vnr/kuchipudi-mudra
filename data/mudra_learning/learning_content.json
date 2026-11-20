@@ -1,0 +1,548 @@
+{
+  "project_name": "MudraGuru — Offline Intelligent Mudra Learning Studio",
+  "version": "1.0.0",
+  "last_updated": "2026-11-15",
+  "total_mudras": 30,
+  "mudra_entries": {
+    "1-Pataka": {
+      "mudra_id": "1-Pataka",
+      "traditional_name": "Pataka (Flag)",
+      "alternate_name": "Flag",
+      "meaning": "Symbolizes clouds, forests, rivers, denial, saying no, walking, night, and flags in classical Bharatanatyam and Kuchipudi vocabulary.",
+      "description": "All four fingers extended straight and closely joined together with no gaps, thumb bent inward touching the base of the index finger.",
+      "formation_instructions": "Extend all four fingers straight together and touch them side by side. Bend the thumb inward against the base of the index finger.",
+      "ordered_instruction_steps": [
+        "Extend all four fingers straight and upward.",
+        "Press fingers tightly together with no gaps.",
+        "Bend the thumb inward so it rests against the base of the index finger."
+      ],
+      "voice_script": "Lesson on Pataka mudra, meaning flag. To form Pataka, extend all four fingers straight and close together, and bend your thumb gently against the base of your palm. Show your hand clearly to the camera.",
+      "reference_image_path": "data/kuchipudi_references/images/1-Pataka_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/1-Pataka_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "2-Tripataka": {
+      "mudra_id": "2-Tripataka",
+      "traditional_name": "Tripataka (Three-part flag)",
+      "alternate_name": "Three-part flag",
+      "meaning": "Symbolizes a crown, tree, Vajra weapon, upward flames, lighting a lamp, and writing.",
+      "description": "Formed from Pataka by bending the ring finger forward while index, middle, and little fingers remain extended.",
+      "formation_instructions": "Start with Pataka hand shape, then bend the ring finger forward at the middle joint while keeping index, middle, and pinky fingers straight.",
+      "ordered_instruction_steps": [
+        "Extend index, middle, and little fingers straight upwards.",
+        "Bend the ring finger forward at the knuckle.",
+        "Keep the thumb tucked gently against the base of the index finger."
+      ],
+      "voice_script": "Lesson on Tripataka mudra, meaning three-part flag. Bend your ring finger forward while keeping the index, middle, and pinky fingers straight upward. Hold your pose steadily.",
+      "reference_image_path": "data/kuchipudi_references/images/2-Tripataka_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/2-Tripataka_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "3-Ardhapataka": {
+      "mudra_id": "3-Ardhapataka",
+      "traditional_name": "Ardhapataka (Half flag)",
+      "alternate_name": "Half flag",
+      "meaning": "Symbolizes a tender shoot, bank of a river, knife, tower, horn, and dual connection.",
+      "description": "Formed from Tripataka by bending both the ring finger and the little finger forward.",
+      "formation_instructions": "Extend index and middle fingers straight together. Bend both the ring finger and the little finger forward.",
+      "ordered_instruction_steps": [
+        "Extend index and middle fingers straight upward and join them.",
+        "Bend both the ring finger and the pinky finger forward at the knuckles.",
+        "Keep the thumb folded against the palm."
+      ],
+      "voice_script": "Lesson on Ardhapataka mudra, meaning half flag. Extend index and middle fingers straight, and bend ring and pinky fingers forward.",
+      "reference_image_path": "data/kuchipudi_references/images/3-Ardhapataka_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/3-Ardhapataka_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "4-Kartharimukha": {
+      "mudra_id": "4-Kartharimukha",
+      "traditional_name": "Kartharimukha (Scissors face)",
+      "alternate_name": "Scissors face",
+      "meaning": "Symbolizes falling down, separation, lightning, corner of the eye, weeping, and disagreement.",
+      "description": "Index and middle fingers are separated into a V shape like scissors, while ring and pinky are folded against the palm.",
+      "formation_instructions": "Extend index and middle fingers apart in a V shape. Fold ring and pinky fingers into the palm and hold with the thumb.",
+      "ordered_instruction_steps": [
+        "Extend index and middle fingers and spread them apart.",
+        "Curl ring and pinky fingers inward toward the palm.",
+        "Cross the thumb over the curled fingers to secure them."
+      ],
+      "voice_script": "Lesson on Kartharimukha mudra, meaning scissors face. Extend index and middle fingers apart in a V shape while curling ring and pinky fingers inward.",
+      "reference_image_path": "data/kuchipudi_references/images/4-Kartharimukha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/4-Kartharimukha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "5-Mayura": {
+      "mudra_id": "5-Mayura",
+      "traditional_name": "Mayura (Peacock)",
+      "alternate_name": "Peacock",
+      "meaning": "Symbolizes a peacock's beak, applying vermilion on the forehead, vomiting, and releasing hair.",
+      "description": "Index, middle, and ring fingers touch the tip of the thumb, while the little finger remains fully extended outward.",
+      "formation_instructions": "Touch the tips of the index, middle, and ring fingers to the tip of the thumb. Extend the little finger straight outwards.",
+      "ordered_instruction_steps": [
+        "Bring the tips of index, middle, and ring fingers together to touch the thumb tip.",
+        "Extend the pinky finger straight out.",
+        "Keep the hand steady and graceful."
+      ],
+      "voice_script": "Lesson on Mayura mudra, meaning peacock. Touch index, middle, and ring fingers to your thumb tip, and extend your pinky finger outward.",
+      "reference_image_path": "data/kuchipudi_references/images/5-Mayura_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/5-Mayura_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "6-Ardhachandra": {
+      "mudra_id": "6-Ardhachandra",
+      "traditional_name": "Ardhachandra (Half moon)",
+      "alternate_name": "Half moon",
+      "meaning": "Symbolizes the crescent moon, holding a spear, waist, bathing, meditation, and greeting.",
+      "description": "All four fingers are kept straight and joined together like Pataka, but the thumb is extended outward at a right angle.",
+      "formation_instructions": "Extend all four fingers straight together, and stretch the thumb outward away from the palm in a wide arc.",
+      "ordered_instruction_steps": [
+        "Keep all four fingers extended straight and joined together.",
+        "Stretch the thumb outward away from the hand.",
+        "Maintain a flat half-moon profile."
+      ],
+      "voice_script": "Lesson on Ardhachandra mudra, meaning half moon. Keep all four fingers straight together and extend your thumb outward.",
+      "reference_image_path": "data/kuchipudi_references/images/6-Ardhachandra_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/6-Ardhachandra_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "7-Arala": {
+      "mudra_id": "7-Arala",
+      "traditional_name": "Arala (Bent / Curved)",
+      "alternate_name": "Bent / Curved",
+      "meaning": "Symbolizes drinking nectar, poison, fierce wind, and divine blessings.",
+      "description": "Index finger is bent forward like a hook, thumb is slightly bent, and other three fingers are extended upward.",
+      "formation_instructions": "Bend the index finger forward at the middle joint. Extend middle, ring, and little fingers upward.",
+      "ordered_instruction_steps": [
+        "Bend the index finger inward into a hook shape.",
+        "Extend middle, ring, and pinky fingers upward.",
+        "Slightly curve the thumb inward."
+      ],
+      "voice_script": "Lesson on Arala mudra, meaning bent. Bend your index finger into a hook shape and extend the remaining fingers upward.",
+      "reference_image_path": "data/kuchipudi_references/images/7-Arala_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/7-Arala_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "8-Shukatunda": {
+      "mudra_id": "8-Shukatunda",
+      "traditional_name": "Shukatunda (Parrot beak)",
+      "alternate_name": "Parrot beak",
+      "meaning": "Symbolizes shooting an arrow, throwing a spear, and expressing fierce intent.",
+      "description": "Formed from Arala by bending the ring finger forward in addition to the bent index finger.",
+      "formation_instructions": "Bend index and ring fingers inward. Keep middle and pinky fingers extended upward.",
+      "ordered_instruction_steps": [
+        "Bend both the index finger and the ring finger inward.",
+        "Extend the middle finger and the pinky finger straight upward.",
+        "Tuck the thumb gently against the side."
+      ],
+      "voice_script": "Lesson on Shukatunda mudra, meaning parrot beak. Bend index and ring fingers inward while keeping middle and pinky fingers extended.",
+      "reference_image_path": "data/kuchipudi_references/images/8-Shukatunda_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/8-Shukatunda_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "9-Mushti": {
+      "mudra_id": "9-Mushti",
+      "traditional_name": "Mushti (Fist)",
+      "alternate_name": "Fist",
+      "meaning": "Symbolizes firmness, grasping an object, combat, holding weapons, and steadfastness.",
+      "description": "All four fingers curled inward tightly into the palm with the thumb resting across their fingers.",
+      "formation_instructions": "Curl all four fingers into a firm fist, and place the thumb across the front of the fingers.",
+      "ordered_instruction_steps": [
+        "Curl all four fingers inward tightly into the palm.",
+        "Place the thumb across the closed fingers.",
+        "Maintain a firm, steadfast grip."
+      ],
+      "voice_script": "Lesson on Mushti mudra, meaning fist. Curl all four fingers inward into a firm fist with your thumb across the front.",
+      "reference_image_path": "data/kuchipudi_references/images/9-Mushti_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/9-Mushti_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "10-Shikara": {
+      "mudra_id": "10-Shikara",
+      "traditional_name": "Shikara (Peak / Spire)",
+      "alternate_name": "Peak / Spire",
+      "meaning": "Symbolizes a bow, pillar, tooth, lip, offering, acceptance, and remembering.",
+      "description": "Fist formed with the thumb extended straight upward like a spire.",
+      "formation_instructions": "Curl all four fingers into a fist, but extend the thumb straight upward pointing towards the sky.",
+      "ordered_instruction_steps": [
+        "Curl the four fingers into a closed fist.",
+        "Extend the thumb straight upward pointing up.",
+        "Hold the hand stable."
+      ],
+      "voice_script": "Lesson on Shikara mudra, meaning peak. Form a fist and point your thumb straight upward like a spire.",
+      "reference_image_path": "data/kuchipudi_references/images/10-Shikara_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/10-Shikara_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "11-Kapitta": {
+      "mudra_id": "11-Kapitta",
+      "traditional_name": "Kapitta (Wood apple)",
+      "alternate_name": "Wood apple",
+      "meaning": "Symbolizes holding Lakshmi or Saraswati, milking cows, holding flowers, and dancing.",
+      "description": "Index finger is curved over the tip of the thumb while the remaining three fingers are curled into the palm.",
+      "formation_instructions": "Bend the index finger over the tip of the thumb. Curl middle, ring, and pinky fingers into the palm.",
+      "ordered_instruction_steps": [
+        "Curve the index finger over the thumb tip.",
+        "Curl middle, ring, and pinky fingers inward.",
+        "Hold the hand firmly in position."
+      ],
+      "voice_script": "Lesson on Kapitta mudra, meaning wood apple. Curve your index finger over your thumb tip and curl the other fingers inward.",
+      "reference_image_path": "data/kuchipudi_references/images/11-Kapitta_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/11-Kapitta_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "12-Katakamukha_1": {
+      "mudra_id": "12-Katakamukha_1",
+      "traditional_name": "Katakamukha Type 1 (Bracelet opening)",
+      "alternate_name": "Bracelet opening 1",
+      "meaning": "Symbolizes plucking flowers, wearing a necklace, drawing a bowstring, and speech.",
+      "description": "Thumb, index, and middle fingers are brought together with tips touching, while ring and little fingers are slightly raised.",
+      "formation_instructions": "Touch the tips of thumb, index, and middle fingers together. Slightly curve and raise ring and pinky fingers.",
+      "ordered_instruction_steps": [
+        "Bring thumb, index, and middle fingertips together.",
+        "Slightly curve and raise ring and pinky fingers.",
+        "Keep the hand graceful."
+      ],
+      "voice_script": "Lesson on Katakamukha Type 1 mudra. Touch the tips of your thumb, index, and middle fingers together while raising the other two.",
+      "reference_image_path": "data/kuchipudi_references/images/12-Katakamukha_1_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/12-Katakamukha_1_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "13-Katakamukha_2": {
+      "mudra_id": "13-Katakamukha_2",
+      "traditional_name": "Katakamukha Type 2",
+      "alternate_name": "Bracelet opening 2",
+      "meaning": "Symbolizes showing a mirror, looking at reflection, and applying sandalwood paste.",
+      "description": "Variation of Katakamukha with specific finger spacing for mirror gestures.",
+      "formation_instructions": "Form Katakamukha shape with slightly wider finger separation for expressive gestures.",
+      "ordered_instruction_steps": [
+        "Form the foundational Katakamukha hand shape.",
+        "Adjust finger curvature for expressive performance.",
+        "Hold steady."
+      ],
+      "voice_script": "Lesson on Katakamukha Type 2 mudra. Maintain the bracelet opening shape with graceful finger alignment.",
+      "reference_image_path": "data/kuchipudi_references/images/13-Katakamukha_2_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/13-Katakamukha_2_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "14-Katakamukha_3": {
+      "mudra_id": "14-Katakamukha_3",
+      "traditional_name": "Katakamukha Type 3",
+      "alternate_name": "Bracelet opening 3",
+      "meaning": "Symbolizes stringing flowers, applying collyrium, and delicate actions.",
+      "description": "Third variation of Katakamukha for delicate narrative actions.",
+      "formation_instructions": "Form Katakamukha with a refined pinch gesture.",
+      "ordered_instruction_steps": [
+        "Pinch thumb and fingers delicately.",
+        "Keep the hand relaxed and expressive.",
+        "Hold pose."
+      ],
+      "voice_script": "Lesson on Katakamukha Type 3 mudra. Form a delicate pinch gesture with thumb and fingers.",
+      "reference_image_path": "data/kuchipudi_references/images/14-Katakamukha_3_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/14-Katakamukha_3_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "15-Suchi": {
+      "mudra_id": "15-Suchi",
+      "traditional_name": "Suchi (Needle)",
+      "alternate_name": "Needle",
+      "meaning": "Symbolizes pointing, a hundred, supreme spirit, sun, city, and threatening.",
+      "description": "Index finger extended straight upward like a needle while other fingers are curled into the palm.",
+      "formation_instructions": "Extend the index finger straight upward. Curl middle, ring, and pinky fingers into the palm and hold with the thumb.",
+      "ordered_instruction_steps": [
+        "Extend the index finger straight upward.",
+        "Curl middle, ring, and pinky fingers inward.",
+        "Rest the thumb across the curled fingers."
+      ],
+      "voice_script": "Lesson on Suchi mudra, meaning needle. Extend your index finger straight upward and curl the remaining fingers inward.",
+      "reference_image_path": "data/kuchipudi_references/images/15-Suchi_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/15-Suchi_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "16-Chandrakala": {
+      "mudra_id": "16-Chandrakala",
+      "traditional_name": "Chandrakala (Crescent moon)",
+      "alternate_name": "Crescent moon",
+      "meaning": "Symbolizes the crescent moon worn on Shiva's head and the face.",
+      "description": "Index finger extended like Suchi and thumb extended outward like Ardhachandra.",
+      "formation_instructions": "Extend index finger upward and stretch thumb outward. Curl remaining three fingers into the palm.",
+      "ordered_instruction_steps": [
+        "Extend index finger straight upward.",
+        "Stretch the thumb outward at a right angle.",
+        "Curl middle, ring, and pinky fingers into the palm."
+      ],
+      "voice_script": "Lesson on Chandrakala mudra, meaning crescent moon. Extend your index finger upward and stretch your thumb outward.",
+      "reference_image_path": "data/kuchipudi_references/images/16-Chandrakala_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/16-Chandrakala_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "17-Padmakosha": {
+      "mudra_id": "17-Padmakosha",
+      "traditional_name": "Padmakosha (Lotus bud / pocket)",
+      "alternate_name": "Lotus bud",
+      "meaning": "Symbolizes a lotus flower, fruit, basket, eating, tightly closed bud, and breasts.",
+      "description": "All fingers are curved slightly outward like a hollow lotus bud.",
+      "formation_instructions": "Curve all fingers outward and upward to form a hollow cup resembling a blooming lotus bud.",
+      "ordered_instruction_steps": [
+        "Curve all fingers and thumb outward.",
+        "Form a hollow cup shape representing a lotus bud.",
+        "Keep fingers slightly separated."
+      ],
+      "voice_script": "Lesson on Padmakosha mudra, meaning lotus bud. Curve all your fingers outward to form a hollow cup shape.",
+      "reference_image_path": "data/kuchipudi_references/images/17-Padmakosha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/17-Padmakosha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "18-Sarpashirasha": {
+      "mudra_id": "18-Sarpashirasha",
+      "traditional_name": "Sarpashirasha (Snake hood)",
+      "alternate_name": "Snake head",
+      "meaning": "Symbolizes a snake's hood, slithering movement, giving water, and muscular strength.",
+      "description": "All fingers are slightly depressed at the knuckles resembling a cobra hood.",
+      "formation_instructions": "Keep all fingers close together and bend the upper joints downward slightly to form a hooded curve.",
+      "ordered_instruction_steps": [
+        "Keep fingers joined together.",
+        "Slightly bend the upper finger joints downward.",
+        "Form a curved snake hood profile."
+      ],
+      "voice_script": "Lesson on Sarpashirasha mudra, meaning snake hood. Keep fingers joined and slightly curve the upper joints downward.",
+      "reference_image_path": "data/kuchipudi_references/images/18-Sarpashirasha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/18-Sarpashirasha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "19-Mrugashirsha": {
+      "mudra_id": "19-Mrugashirsha",
+      "traditional_name": "Mrugashirsha (Deer head)",
+      "alternate_name": "Deer head",
+      "meaning": "Symbolizes a deer's head, calling someone, expressing fear, selecting, and massage.",
+      "description": "Thumb and little finger are extended outward while middle and ring fingers are slightly folded.",
+      "formation_instructions": "Extend thumb and pinky finger outward while keeping index and middle fingers slightly curved.",
+      "ordered_instruction_steps": [
+        "Extend the thumb and pinky finger outward.",
+        "Keep index and middle fingers in a gentle curve.",
+        "Hold steady."
+      ],
+      "voice_script": "Lesson on Mrugashirsha mudra, meaning deer head. Extend your thumb and pinky finger outward while keeping other fingers gentle.",
+      "reference_image_path": "data/kuchipudi_references/images/19-Mrugashirsha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/19-Mrugashirsha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "20-Simhamukha": {
+      "mudra_id": "20-Simhamukha",
+      "traditional_name": "Simhamukha (Lion face)",
+      "alternate_name": "Lion face",
+      "meaning": "Symbolizes a lion's face, rabbit, deer, purification, and preparing medicine.",
+      "description": "Middle and ring fingers touch the tip of the thumb, while index and little fingers are extended straight upward.",
+      "formation_instructions": "Touch the tips of middle and ring fingers to the thumb. Extend index and pinky fingers straight upward.",
+      "ordered_instruction_steps": [
+        "Touch middle and ring fingertips to the thumb tip.",
+        "Extend index and pinky fingers straight upward.",
+        "Form a lion face profile."
+      ],
+      "voice_script": "Lesson on Simhamukha mudra, meaning lion face. Touch middle and ring fingertips to your thumb and extend index and pinky upward.",
+      "reference_image_path": "data/kuchipudi_references/images/20-Simhamukha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/20-Simhamukha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "21-Kangula": {
+      "mudra_id": "21-Kangula",
+      "traditional_name": "Kangula (Bell / Tail)",
+      "alternate_name": "Bell / Tail",
+      "meaning": "Symbolizes a bells cluster, coconut, and small fruits.",
+      "description": "Ring finger is bent into the palm while other fingers are curved gracefully.",
+      "formation_instructions": "Bend the ring finger inward towards the palm. Curve index, middle, and pinky fingers outward.",
+      "ordered_instruction_steps": [
+        "Bend the ring finger inward into the palm.",
+        "Curve index, middle, and pinky fingers outward.",
+        "Keep the thumb relaxed."
+      ],
+      "voice_script": "Lesson on Kangula mudra, meaning bell. Bend your ring finger inward and curve the remaining fingers outward.",
+      "reference_image_path": "data/kuchipudi_references/images/21-Kangula_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/21-Kangula_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "22-Alapadma": {
+      "mudra_id": "22-Alapadma",
+      "traditional_name": "Alapadma (Full blown lotus)",
+      "alternate_name": "Full blown lotus",
+      "meaning": "Symbolizes a fully bloomed lotus, beauty, praise, moonlight, and circular movement.",
+      "description": "All fingers are separated and curved outward like petals of a fully opened lotus.",
+      "formation_instructions": "Spread all fingers apart and curve them outward like open lotus petals.",
+      "ordered_instruction_steps": [
+        "Spread all five fingers wide apart.",
+        "Curve each finger outward to resemble a fully bloomed lotus.",
+        "Hold graceful symmetry."
+      ],
+      "voice_script": "Lesson on Alapadma mudra, meaning full blown lotus. Spread all fingers wide apart and curve them outward like open lotus petals.",
+      "reference_image_path": "data/kuchipudi_references/images/22-Alapadma_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/22-Alapadma_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "23-Chathura": {
+      "mudra_id": "23-Chathura",
+      "traditional_name": "Chathura (Square / Four)",
+      "alternate_name": "Square / Four",
+      "meaning": "Symbolizes gold, copper, sorrow, musk, and slight expression.",
+      "description": "Index, middle, and ring fingers are extended straight together while thumb rests against their base.",
+      "formation_instructions": "Extend index, middle, and ring fingers together. Place the thumb at the base of the middle finger.",
+      "ordered_instruction_steps": [
+        "Extend index, middle, and ring fingers together.",
+        "Press the thumb against the base of the middle finger.",
+        "Keep the little finger folded or relaxed."
+      ],
+      "voice_script": "Lesson on Chathura mudra, meaning square. Extend index, middle, and ring fingers together with your thumb resting at their base.",
+      "reference_image_path": "data/kuchipudi_references/images/23-Chathura_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/23-Chathura_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "24-Bhramara": {
+      "mudra_id": "24-Bhramara",
+      "traditional_name": "Bhramara (Bee)",
+      "alternate_name": "Bee",
+      "meaning": "Symbolizes a bee, crane, cuckoo, and flying insects.",
+      "description": "Index finger is bent, middle finger tip touches the thumb, while ring and little fingers are extended.",
+      "formation_instructions": "Touch the tip of the middle finger to the thumb. Curve the index finger, and extend ring and pinky fingers.",
+      "ordered_instruction_steps": [
+        "Touch middle fingertip to the thumb.",
+        "Curve the index finger inward.",
+        "Extend ring and pinky fingers outward."
+      ],
+      "voice_script": "Lesson on Bhramara mudra, meaning bee. Touch your middle fingertip to your thumb and curve your index finger.",
+      "reference_image_path": "data/kuchipudi_references/images/24-Bhramara_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/24-Bhramara_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "25-Hamsassya": {
+      "mudra_id": "25-Hamsassya",
+      "traditional_name": "Hamsassya (Swan beak)",
+      "alternate_name": "Swan beak",
+      "meaning": "Symbolizes a swan's beak, tying a knot, garland, pearl, and gentle instruction.",
+      "description": "Tips of index finger and thumb touch gently, while middle, ring, and little fingers are extended.",
+      "formation_instructions": "Touch the tip of the index finger to the tip of the thumb. Extend middle, ring, and pinky fingers straight.",
+      "ordered_instruction_steps": [
+        "Touch index fingertip and thumb tip together.",
+        "Extend middle, ring, and pinky fingers straight.",
+        "Keep the hand delicate."
+      ],
+      "voice_script": "Lesson on Hamsassya mudra, meaning swan beak. Touch your index fingertip and thumb tip together and extend the remaining fingers.",
+      "reference_image_path": "data/kuchipudi_references/images/25-Hamsassya_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/25-Hamsassya_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "26-Hamsapaksha": {
+      "mudra_id": "26-Hamsapaksha",
+      "traditional_name": "Hamsapaksha (Swan wing)",
+      "alternate_name": "Swan wing",
+      "meaning": "Symbolizes a swan's wing, arranging things, covering, and number six.",
+      "description": "All four fingers extended straight together like Pataka, but the little finger is slightly bent.",
+      "formation_instructions": "Extend index, middle, and ring fingers straight together. Slightly bend the little finger.",
+      "ordered_instruction_steps": [
+        "Extend index, middle, and ring fingers straight together.",
+        "Slightly bend the pinky finger inward.",
+        "Hold the thumb against the palm."
+      ],
+      "voice_script": "Lesson on Hamsapaksha mudra, meaning swan wing. Extend index, middle, and ring fingers straight and slightly bend your pinky finger.",
+      "reference_image_path": "data/kuchipudi_references/images/26-Hamsapaksha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/26-Hamsapaksha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "27-Samdamsha": {
+      "mudra_id": "27-Samdamsha",
+      "traditional_name": "Samdamsha (Pincer / Tongs)",
+      "alternate_name": "Pincer / Tongs",
+      "meaning": "Symbolizes holding a wound, taking out a thorn, offering bali, and shyness.",
+      "description": "Tips of thumb and index finger touch and open/close like a pincer.",
+      "formation_instructions": "Bring the tips of thumb and index finger together in a pinching pincer formation.",
+      "ordered_instruction_steps": [
+        "Bring thumb and index fingertips together.",
+        "Curve the remaining three fingers slightly.",
+        "Form a pincer shape."
+      ],
+      "voice_script": "Lesson on Samdamsha mudra, meaning pincer. Bring your thumb and index fingertips together in a pincer formation.",
+      "reference_image_path": "data/kuchipudi_references/images/27-Samdamsha_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/27-Samdamsha_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "28-Mukula": {
+      "mudra_id": "28-Mukula",
+      "traditional_name": "Mukula (Bud / Blossom)",
+      "alternate_name": "Bud / Blossom",
+      "meaning": "Symbolizes a flower bud, eating, water lily, holding a seal, and pointing.",
+      "description": "All five fingertips are brought together pointing upward in a closed bud formation.",
+      "formation_instructions": "Bring all five fingertips (thumb and four fingers) together pointing upward.",
+      "ordered_instruction_steps": [
+        "Bring all five fingertips together in a tight cluster.",
+        "Point the fingertips upward like a closed flower bud.",
+        "Hold steady."
+      ],
+      "voice_script": "Lesson on Mukula mudra, meaning flower bud. Bring all five fingertips together pointing upward like a closed bud.",
+      "reference_image_path": "data/kuchipudi_references/images/28-Mukula_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/28-Mukula_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "29-Tamrachuda": {
+      "mudra_id": "29-Tamrachuda",
+      "traditional_name": "Tamrachuda (Rooster / Cock)",
+      "alternate_name": "Rooster / Cock",
+      "meaning": "Symbolizes a rooster, cock, crane, and talking to someone.",
+      "description": "Index finger is crossed over the thumb while other fingers are closed.",
+      "formation_instructions": "Cross the index finger over the thumb while curling the other fingers.",
+      "ordered_instruction_steps": [
+        "Cross the index finger over the thumb.",
+        "Curl middle, ring, and pinky fingers inward.",
+        "Hold the hand firm."
+      ],
+      "voice_script": "Lesson on Tamrachuda mudra, meaning rooster. Cross your index finger over your thumb and curl the other fingers.",
+      "reference_image_path": "data/kuchipudi_references/images/29-Tamrachuda_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/29-Tamrachuda_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    },
+    "30-Trishula": {
+      "mudra_id": "30-Trishula",
+      "traditional_name": "Trishula (Trident)",
+      "alternate_name": "Trident",
+      "meaning": "Symbolizes Lord Shiva's trident, the three gunas, and the three worlds.",
+      "description": "Thumb and little finger touch the palm while index, middle, and ring fingers are extended upright.",
+      "formation_instructions": "Extend index, middle, and ring fingers straight upward. Touch thumb and pinky finger inward.",
+      "ordered_instruction_steps": [
+        "Extend index, middle, and ring fingers straight upward.",
+        "Bend thumb and pinky finger inward towards the palm.",
+        "Form the trident symbol."
+      ],
+      "voice_script": "Lesson on Trishula mudra, meaning trident. Extend your index, middle, and ring fingers straight upward representing the trident.",
+      "reference_image_path": "data/kuchipudi_references/images/30-Trishula_reference.jpg",
+      "tutorial_mp4_path": "data/mudra_learning/videos/30-Trishula_tutorial.mp4",
+      "content_source": "Classical Natya Shastra / Abhinaya Darpana; visual example from Kokul et al. benchmark dataset.",
+      "instructor_validation_status": "pending_instructor_validation"
+    }
+  }
+}

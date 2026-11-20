@@ -1,0 +1,43 @@
+# Python environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Credentials
+.env
+.env.*
+
+# Raw dataset
+data/raw/
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# Temporary webcam captures
+reports/webcam_debug_frame.jpg
+reports/webcam_sample.jpg
+
+# Generated landmark datasets (reproducible; do not redistribute)
+data/processed/augmented_experiment/
+data/processed/v3_experiment/
+
+# Redundant high-volume audit artifacts
+reports/dataset_merge_audit/duplicate_review/pairs/
+reports/dataset_merge_audit/contact_sheets.zip
+.coverage
+
+# PlatformIO build output and package caches (large, regenerable)
+.pio/
+.pioenvs/
+.piolibdeps/
+.platformio/
+.platformio-core/
+firmware/**/build_log.txt
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
